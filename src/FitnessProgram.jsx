@@ -18,7 +18,7 @@ const program = {
       "Barbell Curl (Ayakta Bar ile Pazu Curl)",
       "Incline Dumbbell Curl (Eğik Sehpada Dambıl ile Pazu Curl)",
       "Hammer Curl (Çekiç Stili Dambıl Curl)",
-      "Scott Curl (Scott Sehpasında Dambıl ile Curl)",
+      "Scott Dumbell Curl (Scott Sehpasında Dumbell ile Pazu Curl)",
       "Culp Machine Curl (Biceps Makinesi Curl)"
     ]
   },
@@ -75,40 +75,43 @@ export default function FitnessProgram() {
   };
 
   return (
-    <div className="p-4">
-      <div className="flex gap-2 mb-4 flex-wrap">
-        {Object.keys(program).map(day => (
-          <button
-            key={day}
-            onClick={() => setChecked(prev => ({ ...prev, activeTab: day }))}
-            className={`px-4 py-2 rounded ${checked.activeTab === day ? 'bg-black text-white' : 'bg-gray-200'}`}
-          >
-            {day}
-          </button>
+    <div className="min-h-screen p-4 bg-gradient-to-b from-black via-zinc-800 to-black text-white font-sans">
+      <div className="text-center text-2xl font-bold mb-6">Dış etkenlerin sonuçları değiştirmesine izin verme.</div>
+      <div className="bg-white/5 rounded-2xl p-4 shadow-lg max-w-4xl mx-auto">
+        <div className="flex flex-wrap justify-center gap-3 mb-6">
+          {Object.keys(program).map(day => (
+            <button
+              key={day}
+              className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all"
+              onClick={() => document.getElementById(day)?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              {day}
+            </button>
+          ))}
+        </div>
+        {Object.entries(program).map(([day, data]) => (
+          <div key={day} id={day} className="mb-10">
+            <h2 className="text-xl font-semibold mb-3 border-b border-white/20 pb-1">{day} - {data.title}</h2>
+            <ul className="space-y-2">
+              {data.exercises.map((exercise, idx) => {
+                const key = `${day}-${idx}`;
+                return (
+                  <li key={key} className="flex items-center gap-3">
+                    <input
+                      id={key}
+                      type="checkbox"
+                      checked={checked[key]}
+                      onChange={() => toggleCheck(day, idx)}
+                      className="accent-green-500 w-4 h-4"
+                    />
+                    <label htmlFor={key} className="text-sm">{exercise}</label>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         ))}
       </div>
-
-      {Object.entries(program).map(([day, data]) => (
-        checked.activeTab === day && (
-          <div key={day} className="space-y-4">
-            <h2 className="text-xl font-bold mb-2">{data.title}</h2>
-            {data.exercises.map((exercise, idx) => {
-              const key = `${day}-${idx}`;
-              return (
-                <div key={key} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id={key}
-                    checked={checked[key] || false}
-                    onChange={() => toggleCheck(day, idx)}
-                  />
-                  <label htmlFor={key}>{exercise}</label>
-                </div>
-              );
-            })}
-          </div>
-        )
-      ))}
     </div>
   );
 }
